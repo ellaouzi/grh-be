@@ -1,5 +1,6 @@
 package com.fact.model;
 
+import com.fact.enums.CongeState;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -19,6 +20,8 @@ public class Conge {
     private int nonbre_jour;
     private Date dateDepart;
     private Date dateRetour;
+    @Enumerated(EnumType.STRING)
+    private CongeState state;
     private int restAnneCourante;
     private int restAvantAnneCourant;
     private String statut;
