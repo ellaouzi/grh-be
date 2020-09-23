@@ -30,27 +30,18 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<CongeState
         states.withStates()
                 .initial(CongeState.NEW)
                 .states(EnumSet.allOf(CongeState.class))
-                .end(CongeState.AUTH)
-                .end(CongeState.PRE_AUTH_ERROR)
-                .end(CongeState.AUTH_ERROR);
+                .end(CongeState.REJECTED)
+                .end(CongeState.APPROVED);
     }
 
     @Override
     public void configure(StateMachineTransitionConfigurer<CongeState, CongeEvent> transitions) throws Exception {
-        transitions.withExternal().source(CongeState.NEW).target(CongeState.NEW).event(CongeEvent.PRE_AUTHORIZE)
+        transitions.withExternal().source(CongeState.NEW).target(CongeState.NEW).event(CongeEvent.NOUVEAU)
                 .action(preAuthAction()).guard(congeIdGuard())
                 .and()
-                .withExternal().source(CongeState.NEW).target(CongeState.PRE_AUTH).event(CongeEvent.PRE_AUTH_APPROVED)
+                .withExternal().source(CongeState.NEW).target(CongeState.APPROVED).event(CongeEvent.APPROVEE)
                 .and()
-                .withExternal().source(CongeState.NEW).target(CongeState.PRE_AUTH_ERROR).event(CongeEvent.PRE_AUTH_DECLINED)
-                //preauth to auth
-                .and()
-                .withExternal().source(CongeState.PRE_AUTH).target(CongeState.PRE_AUTH).event(CongeEvent.AUTHORIZE)
-                .action(authAction())
-                .and()
-                .withExternal().source(CongeState.PRE_AUTH).target(CongeState.AUTH).event(CongeEvent.AUTH_APPROVED)
-                .and()
-                .withExternal().source(CongeState.PRE_AUTH).target(CongeState.AUTH_ERROR).event(CongeEvent.AUTH_DECLINED);
+                .withExternal().source(CongeState.NEW).target(CongeState.REJECTED).event(CongeEvent.REJETEE);
     }
 
     @Override
@@ -72,13 +63,13 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<CongeState
 
             if (new Random().nextInt(10) < 5) {
                 System.out.println("Approved");
-                context.getStateMachine().sendEvent(MessageBuilder.withPayload(CongeEvent.PRE_AUTH_APPROVED)
+                context.getStateMachine().sendEvent(MessageBuilder.withPayload(CongeEvent.NOUVEAU)
                         .setHeader(CongeServiceImpl.PAYMENT_ID_HEADER, context.getMessageHeader(CongeServiceImpl.PAYMENT_ID_HEADER))
                         .build());
 
             } else {
                 System.out.println("Declined! No Credit!!!!!!");
-                context.getStateMachine().sendEvent(MessageBuilder.withPayload(CongeEvent.PRE_AUTH_DECLINED)
+                context.getStateMachine().sendEvent(MessageBuilder.withPayload(CongeEvent.NOUVEAU)
                         .setHeader(CongeServiceImpl.PAYMENT_ID_HEADER, context.getMessageHeader(CongeServiceImpl.PAYMENT_ID_HEADER))
                         .build());
             }
@@ -91,13 +82,13 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<CongeState
 
             if (new Random().nextInt(10) < 5) {
                 System.out.println("Auth Approved");
-                context.getStateMachine().sendEvent(MessageBuilder.withPayload(CongeEvent.AUTH_APPROVED)
+                context.getStateMachine().sendEvent(MessageBuilder.withPayload(CongeEvent.NOUVEAU)
                         .setHeader(CongeServiceImpl.PAYMENT_ID_HEADER, context.getMessageHeader(CongeServiceImpl.PAYMENT_ID_HEADER))
                         .build());
 
             } else {
                 System.out.println("Auth Declined! No Credit!!!!!!");
-                context.getStateMachine().sendEvent(MessageBuilder.withPayload(CongeEvent.AUTH_DECLINED)
+                context.getStateMachine().sendEvent(MessageBuilder.withPayload(CongeEvent.NOUVEAU)
                         .setHeader(CongeServiceImpl.PAYMENT_ID_HEADER, context.getMessageHeader(CongeServiceImpl.PAYMENT_ID_HEADER))
                         .build());
             }

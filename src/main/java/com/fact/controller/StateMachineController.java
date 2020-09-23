@@ -33,15 +33,15 @@ public class StateMachineController {
 
             System.out.println(sm.getState().toString());
 
-            sm.sendEvent(CongeEvent.PRE_AUTHORIZE);
+            sm.sendEvent(CongeEvent.NOUVEAU);
 
             System.out.println(sm.getState().toString());
 
-            sm.sendEvent(CongeEvent.PRE_AUTH_APPROVED);
+            sm.sendEvent(CongeEvent.APPROVEE);
 
             System.out.println(sm.getState().toString());
 
-            sm.sendEvent(CongeEvent.PRE_AUTH_DECLINED);
+            sm.sendEvent(CongeEvent.REJETEE);
 
             System.out.println(sm.getState().toString());
             return "Test Statmachine Called!!";

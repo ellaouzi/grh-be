@@ -19,9 +19,7 @@ public class SecuredController {
 
     @GetMapping
     public String securedResource(Authentication auth) {
-
         String ret=  "This is a SECURED resource. Authentication: " + auth.getName() + "; Authorities: "  + auth.getAuthorities();
-        System.out.println(ret);
         Logtrace logtrace = new Logtrace();
         logtrace.setCreated(new Date());
         logtrace.setUsername( auth.getName() );

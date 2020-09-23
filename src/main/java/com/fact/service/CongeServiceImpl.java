@@ -34,7 +34,7 @@ public class CongeServiceImpl implements CongeService {
     public StateMachine<CongeState, CongeEvent> preAuth(Long congeId) {
         StateMachine<CongeState, CongeEvent> sm = build(congeId);
 
-        sendEvent(congeId, sm, CongeEvent.PRE_AUTHORIZE);
+        sendEvent(congeId, sm, CongeEvent.NOUVEAU);
 
         return sm;
     }
@@ -44,7 +44,7 @@ public class CongeServiceImpl implements CongeService {
     public StateMachine<CongeState, CongeEvent> authorizeConge(Long congeId) {
         StateMachine<CongeState, CongeEvent> sm = build(congeId);
 
-        sendEvent(congeId, sm, CongeEvent.AUTHORIZE);
+        sendEvent(congeId, sm, CongeEvent.NOUVEAU);
 
         return sm;
     }
@@ -54,7 +54,7 @@ public class CongeServiceImpl implements CongeService {
     public StateMachine<CongeState, CongeEvent> declineAuth(Long congeId) {
         StateMachine<CongeState, CongeEvent> sm = build(congeId);
 
-        sendEvent(congeId, sm, CongeEvent.AUTH_DECLINED);
+        sendEvent(congeId, sm, CongeEvent.NOUVEAU);
 
         return sm;
     }

@@ -16,7 +16,9 @@ public class Conge {
     private Long id;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "utilisateur_id")
-    private Employee employee;
+    private Utilisateur employee;
+    @Transient
+    private Long employee_id;
     private int nonbre_jour;
     private Date dateDepart;
     private Date dateRetour;
@@ -25,5 +27,8 @@ public class Conge {
     private int restAnneCourante;
     private int restAvantAnneCourant;
     private String statut;
+    private Date created;
+    private Date updated;
+
 
 }

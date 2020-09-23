@@ -13,11 +13,7 @@ import java.util.Set;
 @Data
 @Entity
 
-
 public class Employee extends Utilisateur {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
 
     private String code;
     private boolean enabled;

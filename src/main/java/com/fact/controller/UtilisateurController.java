@@ -2,6 +2,7 @@ package com.fact.controller;
 
 
 import com.fact.dto.UtilisateurDto;
+import com.fact.dto.UtilisateurMapDto;
 import com.fact.model.*;
 import com.fact.repository.AuthorityRepository;
 import com.fact.repository.EntiteRepository;
@@ -36,6 +37,11 @@ public class UtilisateurController {
     @GetMapping("/utilisateurs")
     public ResponseEntity<List<UtilisateurDto>> getAllUtilisateurOptions() {
         return new ResponseEntity<>(utilisateurRepository.allUtilisateurs(), HttpStatus.OK);
+    }
+
+    @GetMapping("/utilisateurList")
+    public ResponseEntity<List<UtilisateurMapDto>> getAllUtilisateursMap() {
+        return new ResponseEntity<>(utilisateurRepository.getUtilisateursList(), HttpStatus.OK);
     }
 
     @PostMapping("/utilisateurs/create")

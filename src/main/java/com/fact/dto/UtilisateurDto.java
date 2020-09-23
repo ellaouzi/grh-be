@@ -6,4 +6,4 @@ public interface UtilisateurDto {
     String getEntite();
     Long getId();
     Boolean getActif();
- }
+  }

@@ -8,5 +8,9 @@ public class StringFormat {
         String.format("|%02d|", 9);
 
         System.out.println( String.format("%02d", heure) + ":" +  String.format("%02d", minute));
+
+        String str = "Demande rejetée";
+        System.out.println(str.indexOf("rejetée"));
+        System.out.println(str.indexOf("rejtée"));
     }
 }

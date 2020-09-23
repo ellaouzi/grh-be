@@ -9,8 +9,7 @@ import java.util.List;
 
 @Data
 @Entity
-
-
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
