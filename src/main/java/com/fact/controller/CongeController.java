@@ -4,6 +4,7 @@ package com.fact.controller;
 import com.fact.dto.CongeDto;
 import com.fact.dto.CongeInrfaceDto;
 import com.fact.dto.CongeItemDto;
+import com.fact.dto.UtilisateurDto;
 import com.fact.mapper.CongeMapper;
 import com.fact.model.Conge;
 import com.fact.model.Employee;
@@ -41,9 +42,14 @@ public class CongeController {
 
     @PostMapping("/conges/create")
     public Conge createConge(@RequestBody Conge conge) {
-
+        Logger logger = LoggerFactory.getLogger(UtilisateurController.class);
+        logger.info("conge: {}", conge);
         Employee employee = new Employee();
-        employee.setId(conge.getEmployee_id());
+        Employee interim = new Employee();
+        interim.setId(employee.getInterim_id_());
+        employee.setId(conge.getEmployee_id_());
+
+        employee.setInterim(interim);
         conge.setEmployee(employee);
         conge.setCreated(new Date());
         conge.setState(NEW);
@@ -55,7 +61,6 @@ public class CongeController {
     @GetMapping("/conges/{id}")
     public ResponseEntity<CongeItemDto> getCongeById(@PathVariable("id") Long id) {
         CongeItemDto conge = congeRepository.congerById(id);
-
          if (conge != null) {
             return new ResponseEntity<>(congeRepository.congerById(id), HttpStatus.OK);
         } else {
@@ -63,12 +68,17 @@ public class CongeController {
         }
     }
 
+    @GetMapping("/congeByManagerId/{id}")
+    public ResponseEntity<List<CongeInrfaceDto>> getCongeByManagerId(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(congeRepository.congesByMangerId(id), HttpStatus.OK);
+    }
+
+
     @PutMapping("/conges/{id}")
     public ResponseEntity<Conge> updateConge(@PathVariable("id") Long id, @RequestBody CongeDto congeDto) {
 
            Logger logger = LoggerFactory.getLogger(UtilisateurController.class);
         logger.info("congeDto: {}", congeDto);
-        System.out.println("Conge ID: " + (id));
         Conge conge= congeRepository.findById(id).get();
 
         conge.setUpdated(new Date());

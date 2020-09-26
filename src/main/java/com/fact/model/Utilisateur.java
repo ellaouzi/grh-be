@@ -9,17 +9,22 @@ import java.util.List;
 
 @Data
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+ // @Table(name = "table_name", uniqueConstraints={@UniqueConstraint(columnNames = "column1"),@UniqueConstraint(columnNames = "column2")})
+@Table(name = "utilisateur", uniqueConstraints={@UniqueConstraint(columnNames = "username")})
+
 public class Utilisateur {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(unique = true, name = "username")
+     @Column(unique = true, name = "username")
     private String login;
     private String clearPassword;
     private String password;
+    @Column(name = "enabled", columnDefinition = "boolean default false")
+    private boolean enabled;
 
-    @OneToMany(fetch = FetchType.EAGER,
+    private String matricule;
+     @OneToMany(fetch = FetchType.EAGER,
             mappedBy="utilisateur",
             cascade = CascadeType.ALL
            )
@@ -33,5 +38,6 @@ public class Utilisateur {
     private Date updated;
     private Long createdBy;
     private Long updatedBy;
+
     //------------------------- Secure Logs---
 }

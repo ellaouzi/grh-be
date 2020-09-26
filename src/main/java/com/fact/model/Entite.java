@@ -28,10 +28,12 @@ public class Entite {
     //------------------------- Secure Logs---
 
 
-    @Override
-    public String toString() {
-        return "Entite{" +
-                "nom='" + nom + '\'' +
-                '}';
+    public Entite() {
+
     }
+    public Entite(String nom) {
+        this.nom = nom;
+    }
+
+
 }

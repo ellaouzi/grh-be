@@ -1,13 +1,11 @@
 package com.fact.controller;
 
 
+import com.fact.dto.CongeItemDto;
 import com.fact.dto.UtilisateurDto;
 import com.fact.dto.UtilisateurMapDto;
 import com.fact.model.*;
-import com.fact.repository.AuthorityRepository;
-import com.fact.repository.EntiteRepository;
-import com.fact.repository.FonctionRepository;
-import com.fact.repository.UtilisateurRepository;
+import com.fact.repository.*;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,6 +28,8 @@ public class UtilisateurController {
     @Autowired
     EntiteRepository entiteRepository;
     @Autowired
+    EmployeeRepository employeeRepository;
+    @Autowired
     AuthorityRepository authorityRepository;
     @Autowired
     FonctionRepository fonctionRepository;
@@ -43,26 +43,43 @@ public class UtilisateurController {
     public ResponseEntity<List<UtilisateurMapDto>> getAllUtilisateursMap() {
         return new ResponseEntity<>(utilisateurRepository.getUtilisateursList(), HttpStatus.OK);
     }
+    @GetMapping("/teamByManagerId/{id}")
+     public ResponseEntity<List<UtilisateurDto>> getTeamByManagerId(@PathVariable("id") Long id) {
+        return new ResponseEntity<>(utilisateurRepository.teamByManagerId(id), HttpStatus.OK);
+    }
 
     @PostMapping("/utilisateurs/create")
     public Utilisateur createUtilisateur(@RequestBody Employee utilisateur) {
 
+
+
         Logger logger = LoggerFactory.getLogger(UtilisateurController.class);
         logger.info("utilisateur: {}", utilisateur);
-        if (utilisateurRepository.findById(utilisateur.getManager_id_()).isPresent()) {
-            Manager manager = new Manager();
-            manager.setId(utilisateur.getManager_id_());
-            utilisateur.setManager(manager);
+
+        try {
+            if (utilisateurRepository.findById(utilisateur.getManager_id_()).isPresent()) {
+                Manager manager = new Manager();
+                manager.setId(utilisateur.getManager_id_());
+                utilisateur.setManager(manager);
+            }
+        }catch (Exception e){
+            logger.info("Now manager specified");
         }
 
-        if (utilisateurRepository.findById(utilisateur.getInterim_id_()).isPresent()) {
-            Employee interim = new Employee();
-            interim.setId(utilisateur.getInterim_id_());
-            utilisateur.setInterim(interim);
+        try {
+            if (utilisateurRepository.findById(utilisateur.getInterim_id_()).isPresent()) {
+                Employee interim = new Employee();
+                interim.setId(utilisateur.getInterim_id_());
+                utilisateur.setInterim(interim);
+            }
+        }catch (Exception e){
+            logger.info("Now interim");
         }
+
 
         if(entiteRepository.findById(utilisateur.getEntite_id_()).isPresent()) {
             utilisateur.setEntite(entiteRepository.findById(utilisateur.getEntite_id_()).get());
+            System.out.println(entiteRepository.findById(utilisateur.getEntite_id_()).get().getNom() +".......");
         }
         if (fonctionRepository.findById(utilisateur.getFonction_id_()).isPresent()) {
             utilisateur.setFonction(fonctionRepository.findById(utilisateur.getFonction_id_()).get());
@@ -76,7 +93,6 @@ public class UtilisateurController {
         authority.setRole("ROLE_USER");
         authority.setUsername(utilisateur.getLogin());
         authorityRepository.save(authority);
-
         return utilisateur;
 
     }
@@ -84,10 +100,20 @@ public class UtilisateurController {
 
     @GetMapping("/utilisateurs/{id}")
     public ResponseEntity<Utilisateur> getUtilisateurById(@PathVariable("id") Long id) {
+         if( utilisateurRepository.findById(id).isPresent()) {
+            return new ResponseEntity<>( utilisateurRepository.findById(id).get(), HttpStatus.OK);
+        } else {
+             System.out.println(id + "<<<<<<<< Not found");
+             System.out.println(utilisateurRepository.findById(id).get());
+             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
-        Utilisateur utilisateur = utilisateurRepository.findById(id).get();
-        if (utilisateur != null) {
-            return new ResponseEntity<>(utilisateur, HttpStatus.OK);
+
+    @GetMapping("/utilisateursByLogin")
+    public ResponseEntity<UtilisateurDto> getUtilisateurById( @RequestParam("username") String username) {
+         if (utilisateurRepository.findByLogin(username) != null) {
+            return new ResponseEntity<>(utilisateurRepository.findByLogin(username), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -107,7 +133,6 @@ public class UtilisateurController {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         utilisateur.setPassword(passwordEncoder.encode(utilisateur.getClearPassword()));
         return new ResponseEntity<>(utilisateurRepository.save(utilisateur), HttpStatus.OK);
-
     }
 
 

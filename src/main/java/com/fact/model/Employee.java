@@ -14,9 +14,7 @@ import java.util.Set;
 @Entity
 
 public class Employee extends Utilisateur {
-
     private String code;
-    private boolean enabled;
     private Date lastLogin;
     private String status;
     private String nom;
@@ -28,8 +26,7 @@ public class Employee extends Utilisateur {
     private String fixe;
     private Date naissance;
     private Date dateRecrutement;
-    private boolean isFonctionnaire;
-     private String login;
+    private String login;
     private String clearPassword;
     private String password;
     @Transient
@@ -42,8 +39,6 @@ public class Employee extends Utilisateur {
     @JoinColumn(name = "entite_id")
     private Entite entite;
 
-
-
     @Transient
     private Long fonction_id_;
     @ManyToOne(fetch = FetchType.EAGER)
@@ -52,8 +47,9 @@ public class Employee extends Utilisateur {
 
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name = "manager_id")
     private Manager manager;
 
 

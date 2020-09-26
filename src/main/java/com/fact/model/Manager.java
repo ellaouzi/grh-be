@@ -1,11 +1,16 @@
 package com.fact.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+
+import static javax.persistence.CascadeType.ALL;
+import static org.hibernate.annotations.FetchMode.SELECT;
 
 @Data
 @Entity
@@ -17,8 +22,10 @@ public class Manager extends Employee {
     private Long id;
 
     @JsonIgnore
-    @OneToMany(mappedBy = "manager")
-    private List<Employee> employees;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "manager", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+            private List<Employee> employees;
+
 
 
 

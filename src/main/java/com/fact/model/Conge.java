@@ -18,7 +18,9 @@ public class Conge {
     @JoinColumn(name = "utilisateur_id")
     private Utilisateur employee;
     @Transient
-    private Long employee_id;
+    private Long employee_id_;
+    @Transient
+    private Long interim_id_;
     private int nonbre_jour;
     private Date dateDepart;
     private Date dateRetour;
@@ -27,6 +29,7 @@ public class Conge {
     private int restAnneCourante;
     private int restAvantAnneCourant;
     private String statut;
+    private String approvedInterimFullname;
     private Date created;
     private Date updated;
 

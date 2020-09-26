@@ -11,4 +11,6 @@ public interface CongeInrfaceDto {
     String getState();
     String getFullname();
     int getNonbre_jour();
+    Long getInterim_id();
+    String getInterim();
  }
